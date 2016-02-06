@@ -14,7 +14,7 @@ public class AdminLogin extends SeleneseTestCase {
 	 * 输出参数：无
 	 * 实现效果：在登录页面输入用户名和密码，并点击登录
 	 * @Author DaiJie
-	 * @Date 2016-1-28
+	 * @Date 2016-1-30
 	 */
 	public void adminLogin(Selenium selenium, ResultSet sourceData)throws Exception {
 		 //准备从SIT数据库的SELENIUM_USERDATA里获取用户数据

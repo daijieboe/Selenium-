@@ -4,7 +4,6 @@ import com.thoughtworks.selenium.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import test.GetConnection;
 
 /*参数说明：
  * orderNo：订单号

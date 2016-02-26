@@ -33,14 +33,11 @@ public class AltaBuyNow extends SeleneseTestCase{
 		String BUY_ADDR_PROVINCE = sourceData.getString("BUY_ADDR_PROVINCE");
 		String BUY_ADDR_CITY = sourceData.getString("BUY_ADDR_CITY");
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
-		String TEST_URL =null;
-		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
-
 		int	TESULT_ID = 0;
 		
 		//获取本次测试结果的ID
 		GetMaxResultId getMaxResultId = new GetMaxResultId();
-		TESULT_ID = getMaxResultId.getMaxResultId(TEST_URL);
+		TESULT_ID = getMaxResultId.getMaxResultId();
 		
 		//点击商城ALTA页
 		selenium.setSpeed("2000");
@@ -66,49 +63,49 @@ public class AltaBuyNow extends SeleneseTestCase{
 	    
 	  //选择购买数量。数量要由int型的要转换成string类型的
 	    selenium.type("xpath=(//input[@type='text'])[4]", Integer.toString(PRD_NUM_1));
-	    
-	  //判断销售模式是否正确，不正确则返回测试结果
-	    int resultnumber = 1;
-	  	String name1=selenium.getText("xpath=//a[@class='btn1 btn_payfor']");
-	  	if("立即结算".equals(name1)){
-	  		if ("0".equals(IS_PRESELL_1)){
-	  			System.out.println("销售模式是正常销售，测试的是非预售，匹配！");
-	  			System.out.println("立即购买alta，并去购物车结算！");
-	  			resultnumber = 1;
-	  	       }else{ 
-	  		    System.out.println("销售模式是正常销售，测试的是预售，不匹配！直接返回测试结果~");
-	  		    resultnumber = 2;
-	  		  }
-	  	}else if("立即预定".equals(name1)){
-	  		if ("0".equals(IS_PRESELL_1)){
-	  			System.out.println("销售模式是预售，测试的是非预售，不匹配！直接返回测试结果~");
-	  			resultnumber = 2;
-	  		}else{ 
-	  			System.out.println("销售模式是预售，测试的是预售，匹配！");
-	  			System.out.println("立即购买alta，并去购物车结算！");
-	  			resultnumber = 1;
-	  		   }
-	  		}else if("到货通知".equals(name1)){
-	  			System.out.println("目前商品缺货!");
-	  			resultnumber = 3;
-	  		}else {
-	  			System.out.println("目前商品下架!");
-	  			resultnumber = 3;
-	  		}
-	    System.out.println("resultnumber="+resultnumber);  	
-	    
-	  	if(resultnumber ==3){
-	  		System.out.println("商品1已下架或缺货，退出测试");
-	  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
-	  		WriteOrderResult p = new WriteOrderResult();
-	  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
-	  	}else if (resultnumber ==2){
-	  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
-	  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
-	  		WriteOrderResult q = new WriteOrderResult();
-	  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
-	  	}
-	  	
+//	    
+//	  //判断销售模式是否正确，不正确则返回测试结果
+//	    int resultnumber = 1;
+//	  	String name1=selenium.getText("xpath=//a[@class='btn1 btn_payfor']");
+//	  	if("立即结算".equals(name1)){
+//	  		if ("0".equals(IS_PRESELL_1)){
+//	  			System.out.println("销售模式是正常销售，测试的是非预售，匹配！");
+//	  			System.out.println("立即购买alta，并去购物车结算！");
+//	  			resultnumber = 1;
+//	  	       }else{ 
+//	  		    System.out.println("销售模式是正常销售，测试的是预售，不匹配！直接返回测试结果~");
+//	  		    resultnumber = 2;
+//	  		  }
+//	  	}else if("立即预定".equals(name1)){
+//	  		if ("0".equals(IS_PRESELL_1)){
+//	  			System.out.println("销售模式是预售，测试的是非预售，不匹配！直接返回测试结果~");
+//	  			resultnumber = 2;
+//	  		}else{ 
+//	  			System.out.println("销售模式是预售，测试的是预售，匹配！");
+//	  			System.out.println("立即购买alta，并去购物车结算！");
+//	  			resultnumber = 1;
+//	  		   }
+//	  		}else if("到货通知".equals(name1)){
+//	  			System.out.println("目前商品缺货!");
+//	  			resultnumber = 3;
+//	  		}else {
+//	  			System.out.println("目前商品下架!");
+//	  			resultnumber = 3;
+//	  		}
+//	    System.out.println("resultnumber="+resultnumber);  	
+//	    
+//	  	if(resultnumber ==3){
+//	  		System.out.println("商品1已下架或缺货，退出测试");
+//	  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
+//	  		WriteOrderResult p = new WriteOrderResult();
+//	  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+//	  	}else if (resultnumber ==2){
+//	  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
+//	  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
+//	  		WriteOrderResult q = new WriteOrderResult();
+//	  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+//	  	}
+//	  	
 	  	//点击立即结算
 		selenium.click("css=a[name=\"addToCart\"] > span.bgcolor_edf0e9");
 		selenium.waitForPageToLoad("30000");
@@ -141,14 +138,11 @@ public class AltaBuyNow extends SeleneseTestCase{
 		String BUY_ADDR_PROVINCE = sourceData.getString("BUY_ADDR_PROVINCE");
 		String BUY_ADDR_CITY = sourceData.getString("BUY_ADDR_CITY");
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
-		String TEST_URL =null;
-		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
-
-		int	TESULT_ID = 0;
+        int	TESULT_ID = 0;
 		
 		//获取本次测试结果的ID
 		GetMaxResultId getMaxResultId = new GetMaxResultId();
-		TESULT_ID = getMaxResultId.getMaxResultId(TEST_URL);
+		TESULT_ID = getMaxResultId.getMaxResultId();
 
 		
 		//点击ALTA页面 立即购买 按钮
@@ -211,12 +205,12 @@ public class AltaBuyNow extends SeleneseTestCase{
 	  		System.out.println("商品1已下架或缺货，退出测试");
 	  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
 	  		WriteOrderResult p = new WriteOrderResult();
-	  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}else if (resultnumber ==2){
 	  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
 	  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
 	  		WriteOrderResult q = new WriteOrderResult();
-	  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}
 		
 	  		
@@ -261,14 +255,10 @@ public class AltaBuyNow extends SeleneseTestCase{
 		String BUY_ADDR_PROVINCE = sourceData.getString("BUY_ADDR_PROVINCE");
 		String BUY_ADDR_CITY = sourceData.getString("BUY_ADDR_CITY");
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
-		String TEST_URL =null;
-		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
-
 		int	TESULT_ID = 0;
-		
 		//获取本次测试结果的ID
 		GetMaxResultId getMaxResultId = new GetMaxResultId();
-		TESULT_ID = getMaxResultId.getMaxResultId(TEST_URL);
+		TESULT_ID = getMaxResultId.getMaxResultId();
 		
 		//点击商城ALTA页
 		selenium.setSpeed("2000");
@@ -328,12 +318,12 @@ public class AltaBuyNow extends SeleneseTestCase{
 	  		System.out.println("商品1已下架或缺货，退出测试");
 	  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
 	  		WriteOrderResult p = new WriteOrderResult();
-	  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}else if (resultnumber ==2){
 	  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
 	  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
 	  		WriteOrderResult q = new WriteOrderResult();
-	  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}
 	  		
 	  	//点击立即结算
@@ -402,12 +392,12 @@ public class AltaBuyNow extends SeleneseTestCase{
 	  		System.out.println("商品2已下架或缺货，退出测试");
 	  		String TEST_RESULT_REASON = "商品2已下架或缺货，退出测试";
 	  		WriteOrderResult p = new WriteOrderResult();
-	  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}else if (resultnumber1 ==2){
 	  		System.out.println("商品2销售模式与测试数据不匹配，退出测试");
 	  		String TEST_RESULT_REASON = "商品2销售模式与测试数据不匹配，退出测试";
 	  		WriteOrderResult q = new WriteOrderResult();
-	  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}
 	  	
 	  	//点击立即结算
@@ -452,14 +442,11 @@ public class AltaBuyNow extends SeleneseTestCase{
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
 		
 		String TEST_NO = sourceData.getString("TEST_NO");
-		String TEST_URL =null;
-		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
-
-		int	TESULT_ID = 0;
+        int	TESULT_ID = 0;
 		
 		//获取本次测试结果的ID
 		GetMaxResultId getMaxResultId = new GetMaxResultId();
-		TESULT_ID = getMaxResultId.getMaxResultId(TEST_URL);
+		TESULT_ID = getMaxResultId.getMaxResultId();
 		
 		//点击ALTA页面 立即购买 按钮
 		selenium.setSpeed("2000");
@@ -521,12 +508,12 @@ public class AltaBuyNow extends SeleneseTestCase{
 		  		System.out.println("商品1已下架或缺货，退出测试");
 		  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
 		  		WriteOrderResult p = new WriteOrderResult();
-		  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+		  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 		  	}else if (resultnumber ==2){
 		  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
 		  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
 		  		WriteOrderResult q = new WriteOrderResult();
-		  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+		  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 		  	}
 		
 	  		
@@ -596,12 +583,12 @@ public class AltaBuyNow extends SeleneseTestCase{
 	  		System.out.println("商品2已下架或缺货，退出测试");
 	  		String TEST_RESULT_REASON = "商品2已下架或缺货，退出测试";
 	  		WriteOrderResult p = new WriteOrderResult();
-	  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		p.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}else if (resultnumber2 == 2){
 	  		System.out.println("商品2销售模式与测试数据不匹配，退出测试");
 	  		String TEST_RESULT_REASON = "商品2销售模式与测试数据不匹配，退出测试";
 	  		WriteOrderResult q = new WriteOrderResult();
-	  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+	  		q.writeresult2(TESULT_ID, TEST_NO,TEST_RESULT_REASON);
 	  	}
 		
 	  		

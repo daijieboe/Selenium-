@@ -27,11 +27,10 @@ public void addressChange_PC(Selenium selenium, ResultSet sourceData) throws Exc
 	ORDER_ADDR_PROVINCE = sourceData.getString("ORDER_ADDR_PROVINCE");
 	ORDER_ADDR_CITY = sourceData.getString("ORDER_ADDR_CITY");
 	ORDER_ADDR_AREA = sourceData.getString("ORDER_ADDR_AREA");
-	String TEST_URL =null;
-	TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
+	
 	int i = 1;
     String ID = null;
-	Connection conn = new GetConnection().getConnection(TEST_URL);
+	Connection conn = new GetConnection().getConnection("sit");
 	String userSql3= "select t.ID from MB_ADDR t ,MB_MEMBER k where t.member_id=k.member_id and k.account_name='"+USERNAME+"' and t.is_default='1'";
 	java.sql.Statement stmt1 = conn.createStatement();
 	ResultSet rs3 = stmt1.executeQuery(userSql3);	

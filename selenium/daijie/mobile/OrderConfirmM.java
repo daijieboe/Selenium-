@@ -34,20 +34,20 @@ public class OrderConfirmM {
 				selenium.click("xpath=(//span[@name='paytype'])[2]");
 			}
 
-			// 是否需要发票
+			//打开发票信息填写页
+			selenium.click("css=span.icondetailright > a > img");
+			// 等待页面加载
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// 如果需要发票
 			if (sourceData.getString("IS_INVOICE").equalsIgnoreCase("1")) {
-				selenium.click("css=span.icondetailright > a > img");
-				// 等待页面加载
-				try {
-					Thread.sleep(1500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-				// 是否需要开增值税专用发票
+				// 开增值税专用发票
 				if (sourceData.getString("IS_VAT_INVOICE")
 						.equalsIgnoreCase("1")) {
-					// 调用增票开票方法
+					// 调用增票开票类
 					VatInvoiceM v = new VatInvoiceM();
 					v.fillVatInvoice(selenium, sourceData);
 				}
@@ -61,6 +61,16 @@ public class OrderConfirmM {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+				}
+			}else{
+				//不需要发票
+				selenium.click("id=checknobill");
+				selenium.click("id=invoiceInfoOk");
+				// 等待页面加载
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 

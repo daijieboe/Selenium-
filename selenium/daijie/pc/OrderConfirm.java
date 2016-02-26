@@ -8,7 +8,7 @@ import com.thoughtworks.selenium.Selenium;
 
 public class OrderConfirm {
 	/*
-	 * 本方法为填写手机端订单结算页的信息（配送日期、支付方式、发票信息、订单备注），并进行订单提交
+	 * 本方法为填写PC端订单结算页的信息（配送日期、支付方式、发票信息、订单备注），并进行订单提交
 	 * 输入参数：
 	 *          Selenium（selenium测试必备变量）
 	 *          ResultSet（某条测试数据记录）
@@ -37,7 +37,7 @@ public class OrderConfirm {
 				selenium.click("id=downline");
 			}
 
-			// 是否需要发票
+			// 如果需要发票
 			if (sourceData.getString("IS_INVOICE").equalsIgnoreCase("1")) {
 				selenium.click("id=askForInvoice");
 
@@ -53,6 +53,10 @@ public class OrderConfirm {
 							sourceData.getString("INVOICE_HEAD"));
 					selenium.click("css=div.divsavebillinfo.btnsavebillinfo");
 				}
+			}else{
+				//选择不需要发票并保存
+				selenium.click("id=onInvoice");
+				selenium.click("css=div.divsavebillinfo.btnsavebillinfo");
 			}
 
 			// 添加订单备注

@@ -48,7 +48,7 @@ public class GetConnection {
 		}
 		case "pre": {
 			// 定义连接数据库的URL资源
-			String url = "jdbc:oracle:thin:@10.80.20.187:1521:scpro";
+			String url = "jdbc:oracle:thin:@10.80.20.187:1521:scpre";
 			// 定义连接数据库的用户名称与密码
 			String username = "scadm";
 			String password = "adm2014";

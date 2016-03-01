@@ -12,7 +12,7 @@ public class GetMaxResultId {
 //		int i = 1;
 		String sq = null;
 		int TESULT_ID = 0;
-		Connection conn = new GetConnection().getConnection(TEST_URL);
+		Connection conn = new GetConnection().getConnection("sit");
 	//	sq = "SELECT * FROM SELENIUM_OR_RESULT ORDER BY TESULT_ID DESC";//取最后一列，待优化
 		sq = "SELECT MAX(TESULT_ID) FROM SELENIUM_OR_RESULT";
 		java.sql.Statement stmt = conn.createStatement();

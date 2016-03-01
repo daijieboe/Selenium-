@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 
 import com.thoughtworks.selenium.*;
 
+import daijie.basic.GetConnection;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +27,7 @@ public class CommonLogin {
 
 	{
 		// 从数据库获取登录名和密码
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		System.out.println("no problem,for now");
 		String userSql = "select * from test_commonuser where username='"
 				+ object + "'";

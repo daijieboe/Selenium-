@@ -1,7 +1,7 @@
 package test;
 
 import com.thoughtworks.selenium.*;
-
+import daijie.basic.GetConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
@@ -28,7 +28,7 @@ public class Open extends SeleneseTestCase
 
 	{
 		//从数据库获取登录名和密码,暂时全部取出
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String userSql= "select * from SELENUIM_TEST_LOGIN where username='13910932698'";
 		java.sql.Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(userSql);	
@@ -173,7 +173,7 @@ public class Open extends SeleneseTestCase
 	public void writeOrderId(String userName,String writeOrderId) throws Exception
 
 	{
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String insertSql= "insert into ORDER_RESULT(USERNAME,ORDERID) VALUES ('"+userName+"','"+writeOrderId+"')";
 	
 		java.sql.Statement stmt = conn.createStatement();

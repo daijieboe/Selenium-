@@ -3,8 +3,6 @@ import daijie.admin.*;
 import daijie.basic.*;
 import daijie.mobile.OrderConfirmM;
 
-
-
 import com.thoughtworks.selenium.*;
 //import org.openqa.selenium.WebElement;
 import java.sql.Connection;
@@ -19,7 +17,7 @@ public class OrderMobile extends SeleneseTestCase {
         // 测试数据行数暂时固定
 		String testNo = "tc.or.4";
 		// 浏览器路径暂时固定
-		String route = "*firefox C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
+		String route = "*firefox E:\\软件下载\\火狐浏览器\\firefox.exe";
 
 		// 从测试数据表中按照testNo获取数据
 //		String prefix_1 = "sit";
@@ -46,7 +44,7 @@ public class OrderMobile extends SeleneseTestCase {
 		ResultSet sourceData = null;
 		Connection c = new GetConnection().getConnection("sit");
 		// 测试数据行数暂时固定
-		String testNo = "tc.or.6";
+		String testNo = "tc.or.4";
 		
 
 		// 从测试数据表中按照testNo获取测试数据
@@ -80,7 +78,7 @@ public class OrderMobile extends SeleneseTestCase {
 		//下单类型：1、核心商品id1
 		case "1":{
 			System.out.println("下单类型为单个Alta商品");
-			AltaBuyNow altabuynow2 = new AltaBuyNow(selenium);
+			AltaBuyNow altabuynow2 = new AltaBuyNow();
 			altabuynow2.altaBuyNow2(selenium, sourceData);
 			break;
 		}
@@ -92,7 +90,7 @@ public class OrderMobile extends SeleneseTestCase {
 		//下单类型：3、多个核心（商品id1+商品id2）
 		case "3":{
 			System.out.println("下单类型为2个Alta商品");
-			AltaBuyNow altabuynow4 = new AltaBuyNow(selenium);
+			AltaBuyNow altabuynow4 = new AltaBuyNow();
 			altabuynow4.altaBuyNow4(selenium, sourceData);
 			break;
 		}
@@ -122,7 +120,7 @@ public class OrderMobile extends SeleneseTestCase {
 		UpdateOrderPay updateorderpay = new UpdateOrderPay();
 	    
 		if("1".equals(COMBINE_TYPE)){			
-	    updateorderpay.updateOrderPay(orderOrigin,orderId,PAY_MODE);
+	    updateorderpay.updateOrderPay(orderId,PAY_MODE,"sit");
 	    TEST_RESULT = "2";
 	    System.out.println("只下1个Alta");
 		}     
@@ -143,7 +141,7 @@ public class OrderMobile extends SeleneseTestCase {
 		//TEST_RESULT_REASON 测试不通过原因
 
 	   GetMaxResultId getMaxResultId = new GetMaxResultId();
-	   TESULT_ID = getMaxResultId.getMaxResultId(orderOrigin);
+	   TESULT_ID = getMaxResultId.getMaxResultId("sit");
 	   ORDER_NO = orderId;
 	   if("0".equals(PAY_MODE)){
 		   ORDER_STATUS = "20";//部分支付
@@ -155,11 +153,11 @@ public class OrderMobile extends SeleneseTestCase {
 	   System.out.println(""+TESULT_ID+","+TEST_NO+","+ORDER_STATUS+"");
    
 	   WriteOrderResult writerestult = new WriteOrderResult();
-	   writerestult.writeresult(orderOrigin,TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
+	   writerestult.writeresult("sit",TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
 	   System.out.println("测试结果写入数据库完成");
 	   
 	  // 模拟订单流程，打开中台
-	   selenium = new DefaultSelenium("localhost", 4444, "*firefox C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe", "http://sitscadm.boe.com/sc-support-admin");
+	   selenium = new DefaultSelenium("localhost", 4444, "*firefox E:\\软件下载\\火狐浏览器\\firefox.exe", "http://sitscadm.boe.com/sc-support-admin");
 	   selenium.start();
 	   selenium.open("http://sitscadm.boe.com/sc-support-admin");
 	   System.out.println("打开中台登录页！订单号为："+orderId);

@@ -4,6 +4,7 @@ import daijie.admin.*;
 import daijie.basic.*;
 import daijie.pc.*;
 import com.thoughtworks.selenium.*;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 
@@ -15,23 +16,10 @@ public class OrderPC extends SeleneseTestCase
 	public void setUp() throws Exception
 
 	{
-	
-		ResultSet sourceData = null;
-        // 测试数据行数暂时固定
-		String testNo = "tc.or.1";
-		// 浏览器路径暂时固定
-		String route = "*firefox D:\\Program Files\\Mozilla Firefox\\firefox.exe";
-
-		// 从测试数据表中按照testNo获取数据
-	  //  String FixURL = "sit";
-		Connection c = new GetConnection().getConnection("sit");
-		GetData g = new GetData();
-		sourceData = g.getData(c, testNo);
-		
-		// 根据已获取的数据进行初始化
-		Preparation p = new Preparation();
-		selenium = p.setUp(selenium, route, sourceData.getString("test_url"));
-
+			selenium = new DefaultSelenium("localhost", 4444,
+					"*firefox D:\\Program Files\\Mozilla Firefox\\firefox.exe",
+					"http://sitstore.boe.com");
+			selenium.start();
 	}
 	
 	/*
@@ -80,7 +68,7 @@ public class OrderPC extends SeleneseTestCase
 		//下单类型：1、核心商品id1
 		case "1":{
 			System.out.println("下单类型为单个Alta商品");
-			AltaBuyNow altabuynow1 = new AltaBuyNow(selenium);
+			AltaBuyNow altabuynow1 = new AltaBuyNow();
 			altabuynow1.altaBuyNow1(selenium, sourceData);
 			break;
 		}
@@ -92,7 +80,7 @@ public class OrderPC extends SeleneseTestCase
 		//下单类型：3、多个核心（商品id1+商品id2）
 		case "3":{
 			System.out.println("下单类型为2个Alta商品");
-			AltaBuyNow altabuynow3 = new AltaBuyNow(selenium);
+			AltaBuyNow altabuynow3 = new AltaBuyNow();
 			altabuynow3.altaBuyNow3(selenium, sourceData);
 			break;
 		}
@@ -166,9 +154,8 @@ public class OrderPC extends SeleneseTestCase
 	   WriteOrderResult writerestult = new WriteOrderResult();
 	   writerestult.writeresult(orderOrigin,TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
 	   System.out.println("测试结果写入数据库完成");
-	  // 模拟订单流程，打开中台
-//	   selenium = new DefaultSelenium("localhost", 4444, "*firefox C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe", "http://sitscadm.boe.com/sc-support-admin");
-//	   selenium.start();
+	   // 模拟订单流程，打开中台
+
 	   selenium.open("http://sitscadm.boe.com/sc-support-admin");
 	   System.out.println("打开中台登录页！");
 	  
@@ -179,11 +166,17 @@ public class OrderPC extends SeleneseTestCase
 	   //开始模拟订单流程
 	  	  
 	   OrderStatusInfo o = new OrderStatusInfo();
-	   o.orderNo=orderId;
+	   o.orderNo="11";
 	   o.objectStatus=1;
-	   o.orderOrigin=orderOrigin;
+	   o.orderOrigin="sit";
 	   
 	   new OrderStatusChange().orderStatusChange(selenium, o);
+       
+	   
+	  //判断是否需要取消订单 
+	   System.out.println("*******************！");
+	   IsCancelOrder m = new IsCancelOrder();
+	   m.isCancelOrder(selenium,sourceData,"123");
 	   
 	   
 	}

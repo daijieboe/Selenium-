@@ -1,6 +1,6 @@
 package miaoqian;
 import java.sql.Connection;
-
+import daijie.basic.GetConnection;
 
 public class WriteOrderResult1 {
 
@@ -19,7 +19,7 @@ public class WriteOrderResult1 {
 			String ORDER_STATUS, String ORDER_STATUS_NAME, 
 			String TEST_RESULT, String TEST_RESULT_REASON,String CREAT_DATE) throws Exception{
 		
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		System.out.println("订单号为："+ORDER_NO);
 		System.out.println("测试结果为："+TEST_RESULT);
 		String insertSql= "insert into SELENIUM_OR_RESULT(TESULT_ID,TEST_NO,ORDER_NO,ORDER_STATUS,ORDER_STATUS_NAME,TEST_RESULT,TEST_RESULT_REASON) VALUES ("+TESULT_ID+",'"+TEST_NO+"','"+ORDER_NO+"','"+ORDER_STATUS+"','"+ORDER_STATUS_NAME+"','"+TEST_RESULT+"','"+TEST_RESULT_REASON+"')";

@@ -17,6 +17,7 @@ import miaoqian.JudgePeriSub;
 import test.GetMaxResultId;
 import test.UpdateOrderPay;
 import test.WriteOrderResult;
+import daijie.basic.GetConnection;
 
 
 public class PeriOrder_PC extends SeleneseTestCase
@@ -31,7 +32,7 @@ public class PeriOrder_PC extends SeleneseTestCase
 		String route = "*firefox E:\\软件下载\\火狐浏览器\\firefox.exe";
 		
 		// 从测试数据表中按照testNo获取数据
-		Connection c = new GetConnection().getConnection();		
+		Connection c = new GetConnection().getConnection("sit");		
 		GetData g = new GetData();
 		sourceData = g.getData(c, testNo);
 		
@@ -39,47 +40,6 @@ public class PeriOrder_PC extends SeleneseTestCase
 		Preparation p = new Preparation();
 		selenium = p.setUp(selenium,route, sourceData.getString("test_url"));
 	}
-	
-	
-//	/*
-//	 * 方法名：orderBuyAddress 修改订单省市区
-//	 * 参数in： ORDER_ADDR_PROVINCE  省
-//	 * 参数in： ORDER_ADDR_CITY 市
-//	 * 参数in：ORDER_ADDR_AREA 区
-//	 * 参数out：void
-//	 * */
-//	public void orderBuyAddress(String USERNAME,String ORDER_ADDR_PROVINCE,
-//			String ORDER_ADDR_CITY,
-//			String ORDER_ADDR_AREA)throws Exception
-//	{
-//		//获取当前会员默认地址ID号
-//		int i = 1;
-//		String ID = null;
-//		Connection conn = new ConnectPRE().connectPRE();
-//		String userSql3= "select t.ID from MB_ADDR t ,MB_MEMBER k where t.member_id=k.member_id and k.account_name='"+USERNAME+"' and t.is_default='1'";
-//		java.sql.Statement stmt1 = conn.createStatement();
-//		ResultSet rs3 = stmt1.executeQuery(userSql3);	
-//		while (rs3.next() && i != 0) {
-//			ID = rs3.getString("ID");
-//			i = 0;//结束循环，只取第一个数据
-//		}
-//		System.out.println(ID);
-//		selenium.setSpeed("3000");
-//		selenium.click("class=mycheck mycheck_checked inlineleft div_marginright7");
-//		selenium.click("//div[@onclick='updateAddress("+ID+")']");
-//		selenium.setSpeed("3000");
-//		selenium.type("id=dropprovince", ORDER_ADDR_PROVINCE);
-//	
-//		selenium.type("id=dropcity", ORDER_ADDR_CITY);
-//		selenium.type("id=droparea", ORDER_ADDR_AREA);
-//		selenium.click("css=a.btn1.saveAddress > span.bgcolor_edf0e9");
-//		selenium.waitForPageToLoad("30000");
-//		
-//	}
-	
-
-
-	
 
 	
 	/*    ********************************************主函数************************************    */
@@ -92,7 +52,7 @@ public class PeriOrder_PC extends SeleneseTestCase
 		
 		ResultSet sourceData = null;
 		//获取数据库里的值
-		Connection c = new GetConnection().getConnection();
+		Connection c = new GetConnection().getConnection("sit");
 		// 测试数据必须是自己的数据
 		String testNo = "tc.or.2";
 		
@@ -180,10 +140,10 @@ public class PeriOrder_PC extends SeleneseTestCase
 					System.out.println("订单号为"+orderIdm);
 					orderId = orderIdm.substring(4,17);	
 
-				     updateorderpay.updateOrderPay(orderId,"1");
+				     updateorderpay.updateOrderPay(orderId,"1","sit" );
 				     System.out.println("新的订单号为"+orderId);
 				     TEST_RESULT = "2";
-				     System.out.println("if yu ju");
+				     System.out.println("更新订单的收款状态");
 					
 				}else if ("3".equals(COMBINE_TYPE)){
 					
@@ -198,26 +158,13 @@ public class PeriOrder_PC extends SeleneseTestCase
 				//TEST_RESULT_REASON 测试不通过原因
 
 				   GetMaxResultId getMaxResultId = new GetMaxResultId();
-				   TESULT_ID = getMaxResultId.getMaxResultId();
+				   TESULT_ID = getMaxResultId.getMaxResultId("sit");
 				   ORDER_NO = orderId;
 				   ORDER_STATUS = "30";
 				   ORDER_STATUS_NAME = "已支付待派单";
 				   
 				   System.out.println(""+TESULT_ID+","+TEST_NO+"");
-				   
-//				   java.sql.Date d = new java.sql.Date(System.currentTimeMillis());
-				   
-//				   SimpleDateFormat sdf = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss");
-//				   Date dd = new Date();
-//				   String now = sdf.format(dd);
-//				   
-//				   java.sql.Timestamp CREAT_DATE =new java.sql.Timestamp(dd.getTime());
-//				   System.out.println(CREAT_DATE);
-//				   String dd =sdf.format(d);
-//				   System.out.println(dd);
-//				   Date ddd;CREAT_DATE
-//				   ddd = sdf.parse(dd);
-//				   System.out.println(now);
+
 				   
 				 //********************************miaoqian add blow sentence***************************************
 				   //检查订单的状态
@@ -227,7 +174,7 @@ public class PeriOrder_PC extends SeleneseTestCase
 //				   String payCheck=new Pay_Status().checkStatus(paymentNo, "30")
 				   
 				   WriteOrderResult writerestult = new WriteOrderResult();
-				   writerestult.writeresult(TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
+				   writerestult.writeresult("sit",TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
 				   System.out.println("测试结果写入数据库完成");
 				   
 				   // 模拟订单流程，打开中台

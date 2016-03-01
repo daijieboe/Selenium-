@@ -3,6 +3,7 @@ import com.thoughtworks.selenium.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import daijie.basic.GetConnection;
 
 public class Peri_Mobile extends SeleneseTestCase{
 	
@@ -16,7 +17,7 @@ public class Peri_Mobile extends SeleneseTestCase{
 
 	{
 		//从数据库获取登录名和密码,暂时全部取出
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String userSql= "select * from SELENUIM_TEST_LOGIN where username='18945055228'";
 		java.sql.Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(userSql);	
@@ -31,7 +32,7 @@ public class Peri_Mobile extends SeleneseTestCase{
 	public ResultSet orderTypeGet(String orderId) throws Exception
 	{
 		//取出订单类型
-		Connection conn2 = new GetConnection().getConnection();
+		Connection conn2 = new GetConnection().getConnection("sit");
 		String userSql2= "select * from OR_ORDER t where t.order_no='"+orderId+"'";
 		java.sql.Statement stmt2 = conn2.createStatement();
 		ResultSet ordertype = stmt2.executeQuery(userSql2);	
@@ -190,7 +191,7 @@ public class Peri_Mobile extends SeleneseTestCase{
 	public void writeOrderId(String userName,String writeOrderId) throws Exception
 
 	{
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String insertSql= "insert into ORDER_RESULT(USERNAME,ORDERID) VALUES ('"+userName+"','"+writeOrderId+"')";	
 		java.sql.Statement stmt = conn.createStatement();
 		stmt.executeUpdate(insertSql);

@@ -1,4 +1,4 @@
-package test;
+﻿package test;
 
 import java.sql.Connection;
 
@@ -13,7 +13,7 @@ public class UpdateOrderPay {
 	public void updateOrderPay(String orderId,String PAY_MODE,String orderOrigin) throws Exception
 
 	{
-		Connection conn = new GetConnection().getConnection(orderOrigin);
+		Connection conn = new GetConnection().getConnection("sit");
 		String insertSql2= "update OR_ORDER t SET t.LOCK_FLAG=' ' where t.order_no='"+orderId+"'";
 		String insertSql3= "update OR_ORDER t SET t.STATUS='30' where t.order_no='"+orderId+"'";
 		String insertSql4= "update OR_ORDER t SET t.PAY_STATUS='20' where t.order_no='"+orderId+"'";

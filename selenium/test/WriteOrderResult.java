@@ -21,7 +21,7 @@ public class WriteOrderResult {
 		String ORDER_STATUS, String ORDER_STATUS_NAME, 
 		String TEST_RESULT, String TEST_RESULT_REASON) throws Exception{
 		
-		Connection conn = new GetConnection().getConnection(orderOrigin);
+		Connection conn = new GetConnection().getConnection("sit");
 		String insertSql= "insert into SELENIUM_OR_RESULT(TESULT_ID,TEST_NO,ORDER_NO,ORDER_STATUS,ORDER_STATUS_NAME,TEST_RESULT,TEST_RESULT_REASON,CREAT_DATE) VALUES ("+TESULT_ID+",'"+TEST_NO+"','"+ORDER_NO+"','"+ORDER_STATUS+"','"+ORDER_STATUS_NAME+"','"+TEST_RESULT+"','"+TEST_RESULT_REASON+"',sysdate)";
 		System.out.println(insertSql);
 	    java.sql.Statement stmt = conn.createStatement();

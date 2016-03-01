@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import com.thoughtworks.selenium.SeleneseTestCase;
 import com.thoughtworks.selenium.Selenium;
 
+import test.GetMaxResultId;
 import test.ShoppingCart; 
+import test.WriteOrderResult;
 
 
 public class PeriBuy extends SeleneseTestCase{
@@ -32,16 +34,24 @@ public class PeriBuy extends SeleneseTestCase{
 		int PRD_ID_1 = sourceData.getInt("PRD_ID_1");
 		int PRD_NUM_1 = sourceData.getInt("PRD_NUM_1");
 		String IS_PRESELL_1 = sourceData.getString("IS_PRESELL_1");
-		System.out.println("预售信息为"+IS_PRESELL_1);
-	//	String PRESELL_DATE_1 = sourceData.getString("PRESELL_DATE_1");
+		String TEST_NO = sourceData.getString("TEST_NO");
 		String BUY_ADDR_PROVINCE = sourceData.getString("BUY_ADDR_PROVINCE");
 		String BUY_ADDR_CITY = sourceData.getString("BUY_ADDR_CITY");
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
+		String TEST_URL =null;
+		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
+		
+		int	TESULT_ID;
+		
+		//获取本次测试结果的ID
+		GetMaxResultId getMaxResultId = new GetMaxResultId();
+		TESULT_ID = getMaxResultId.getMaxResultId("sit");
 		
 	        	//点击周边商品页面
 				selenium.open("/store/order/order.html");
 				selenium.click("name=mall");
-				selenium.click("name=Peri_Commodity");
+//				selenium.click("name=Peri_Commodity");
+				selenium.click("name=周边商品");
 				selenium.waitForPageToLoad("30000");				
 			
 				//选择产品id
@@ -60,42 +70,56 @@ public class PeriBuy extends SeleneseTestCase{
 			    selenium.type("xpath=(//input[@type='text'])[4]", Integer.toString(PRD_NUM_1));
 			    
 			  //判断销售模式是否正确，不正确则返回测试结果
+			    int resultnumber = 1;
 			    String state=selenium.getText("xpath=//div[@class='buy_now_sendto_status']");
 			  	if("有货".equals(state))
 			  	{
-			  		System.out.println("销售模式为:有货，正常销售!");
-			  		if (IS_PRESELL_1=="0"){
+			  		if ("0".equals(IS_PRESELL_1)){
 			  			System.out.println("销售模式是正常销售，测试的是非预售，匹配！");
+			  			resultnumber = 1;
 			  	       }else{ 
 			  		    System.out.println("销售模式是正常销售，测试的是预售，不匹配！直接返回测试结果~");			  		    
-			    }
+			  		    resultnumber = 2;
+			  	       }
 			  	}else if("立即预定".equals(state)){
-			  		if (IS_PRESELL_1=="0"){
+			  		if ("0".equals(IS_PRESELL_1)){
 			  			System.out.println("销售模式是预售，测试的是非预售，不匹配！直接返回测试结果~");
+			  			resultnumber = 2;
 			  		}else{ 
 			  			System.out.println("销售模式是预售，测试的是预售，匹配！");
-			  		   }
+			  			resultnumber = 1;   
+			  		}
 			  		}else if("到货通知".equals(state)){
 			  			System.out.println("目前商品缺货!");
+						resultnumber = 3;
 			  		}else {
 			  			System.out.println("目前商品下架!");
+			  			resultnumber = 3;
 			  		}
+			    System.out.println("resultnumber="+resultnumber);
+			    
+			    if(resultnumber ==3){
+			  		System.out.println("商品1已下架或缺货，退出测试");
+			  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
+			  		WriteOrderResult p = new WriteOrderResult();
+			  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+			  	}else if (resultnumber ==2){
+			  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
+			  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
+			  		WriteOrderResult q = new WriteOrderResult();
+			  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+			  	}
+			    
 				
 				//点击立即结算
 				selenium.click("css=a[name=\"addToCart\"] > span");
 				selenium.click("css=a.btn1.div_marginleft20 > span.bgcolor_edf0e9");
 				selenium.waitForPageToLoad("30000");
 				selenium.open("/store/cart/cart.html");
-				//*********************miaoqian  delete blow sentence*********************************
-//				selenium.click("css=#sub > span");
 				selenium.waitForPageToLoad("30000");
 				
 				
 				//点击购物车结算
-//				selenium.open("/store/cart/cart.html");
-	
-//				selenium.click("css=div.text_datepicker_btn");
-//				selenium.click("link=29");
 				selenium.setSpeed("3000");
 			    ShoppingCart shopCart1 = new ShoppingCart();
 				shopCart1.ShoppingCartPC(selenium);
@@ -120,27 +144,33 @@ public class PeriBuy extends SeleneseTestCase{
 		int PRD_ID_1 = sourceData.getInt("PRD_ID_1");
 		int PRD_NUM_1 = sourceData.getInt("PRD_NUM_1");
 		String IS_PRESELL_1 = sourceData.getString("IS_PRESELL_1");
-		
+		System.out.println("销售模式到底是"+IS_PRESELL_1);		
+		String TEST_NO = sourceData.getString("TEST_NO");
 		String BUY_ADDR_PROVINCE = sourceData.getString("BUY_ADDR_PROVINCE");
 		String BUY_ADDR_CITY = sourceData.getString("BUY_ADDR_CITY");
 		String BUY_ADDR_AREA = sourceData.getString("BUY_ADDR_AREA");
+		String TEST_URL =null;
+		TEST_URL = sourceData.getString("TEST_URL").substring(7,10);
 		
-//		//点击商城ALTA页
-//		selenium.open("/mobileStore/index.html#!");
-//		System.out.println("打开 手机端首页 完毕！");
+		int	TESULT_ID = 0;
 		
+		//获取本次测试结果的ID
+		GetMaxResultId getMaxResultId = new GetMaxResultId();
+		TESULT_ID = getMaxResultId.getMaxResultId("sit");
+			
 		//点击周边商品页面
 		System.out.println("打开  完毕！");
-		selenium.click("css=a.menubtn");
-		selenium.click("css=div.menu_item_btn.menu_item_btn_add");
-		selenium.click("link=周边产品");
+		selenium.setSpeed("2000");
+		selenium.click("css=a.menubtn.");
+		selenium.click("css=li[name=\"LM_mall\"] > div.menu_item_text");
+		selenium.click("link=周边商品");
 		System.out.println("手机端周边产品界面打开 完毕！");		
 			
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		//选择商品ID：JBL onbeat Rumble（橙色）---20028   ONYX音乐行星（白色）---20008 AURA翡翠音响（白色）---20006  AURA翡翠音响（黑色）---20005  
 		//音箱（黑色BLK）20029     20031电视
 		selenium.click("xpath= //a[@productid='"+PRD_ID_1+"']");
@@ -156,37 +186,51 @@ public class PeriBuy extends SeleneseTestCase{
         selenium.select("id=dropprovince", "label="+BUY_ADDR_PROVINCE+"");
         selenium.select("id=dropcity", "label="+BUY_ADDR_CITY+"");
         selenium.select("id=droparea", "label="+BUY_ADDR_AREA+"");
-//		selenium.setSpeed("3000");
-//		selenium.select("id=dropprovince", "label=北京");
-//        selenium.select("id=dropcity", "label=北京市区");
-//        selenium.select("id=droparea", "label=东城区");
-//				
+			
 		//选择购买数量
 	 	 selenium.type("id=productNum", Integer.toString(PRD_NUM_1));
 			    
 			  //判断销售模式是否正确，不正确则返回测试结果
-			    int i = 0;
+		 	    int resultnumber = 1;
 			    String state=selenium.getText("xpath=//div[@id='availableStockInfo']");
 			  	if("有货".equals(state)){
-			  		if (IS_PRESELL_1=="0"){
+			  		System.out.println("检查模式了吗");
+			  		if ("0".equals(IS_PRESELL_1)){
 			  			System.out.println("销售模式是正常销售，测试的是非预售，匹配！");
-			  			i = 1;
-			  	       }else{ 
-			  		    System.out.println("销售模式是正常销售，测试的是预售，不匹配！直接返回测试结果~");			  		    
+			  			resultnumber = 1;
+			  	       }
+			  		else{ 
+			  		    System.out.println("销售模式是正常销售，测试的是预售，不匹配！直接返回测试结果~");		
+			  		  System.out.println("销售模式是"+IS_PRESELL_1);	
+			  		resultnumber = 2;
 			  		  }
 			  	}else if("立即预定".equals(state)){
-			  		if (IS_PRESELL_1=="0"){
+			  		if ("0".equals(IS_PRESELL_1)){
 			  			System.out.println("销售模式是预售，测试的是非预售，不匹配！直接返回测试结果~");
+			  			resultnumber = 2;
 			  		}else{ 
 			  			System.out.println("销售模式是预售，测试的是预售，匹配！");
-			  		    i = 1;
+			  			resultnumber = 1;
 			  		   }
 			  		}else if("到货通知".equals(state)){
 			  			System.out.println("目前商品缺货!");
+			  			resultnumber = 3;
 			  		}else {
 			  			System.out.println("目前商品下架!");
+			  			resultnumber = 3;
 			  		}
-				System.out.println("i="+i);	
+
+			  	if(resultnumber ==3){
+			  		System.out.println("商品1已下架或缺货，退出测试");
+			  		String TEST_RESULT_REASON = "商品1已下架或缺货，退出测试";
+			  		WriteOrderResult p = new WriteOrderResult();
+			  		p.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+			  	}else if (resultnumber ==2){
+			  		System.out.println("商品1销售模式与测试数据不匹配，退出测试");
+			  		String TEST_RESULT_REASON = "商品1销售模式与测试数据不匹配，退出测试";
+			  		WriteOrderResult q = new WriteOrderResult();
+			  		q.writeresult2(TEST_URL,TESULT_ID, TEST_NO,TEST_RESULT_REASON);
+			  	}
 				
 				//点击加入购物车
 				selenium.setSpeed("2000");

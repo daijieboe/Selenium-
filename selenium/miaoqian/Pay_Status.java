@@ -3,7 +3,7 @@ import com.thoughtworks.selenium.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-
+import daijie.basic.GetConnection;
 
 public class Pay_Status extends SeleneseTestCase{
 	
@@ -12,7 +12,7 @@ public class Pay_Status extends SeleneseTestCase{
 	{
 		String PAY_STATUS = null;
 		//从数据库 OR_ORDER获取订单的收款单的状态,暂时全部取出 
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String orderSql= "select * from PM_PAYMENT where payment_no= '"+paymentNo+"'";
 		java.sql.Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(orderSql);	

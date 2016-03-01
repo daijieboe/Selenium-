@@ -1,21 +1,18 @@
 package miaoqian;
 import daijie.admin.*;
 import daijie.basic.*;
-import daijie.mobile.OrderConfirm_m;
-//import daijie.pc.*;
-//
-//import java.util.Date;
-//import java.text.DateFormat;
-//import java.text.SimpleDateFormat;
+import daijie.mobile.OrderConfirmM;
+
+
+
 
 import com.thoughtworks.selenium.*;
 
-//import org.openqa.selenium.WebElement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
-import test.GetConnection;
 import test.GetMaxResultId;
+import test.Preparation;
 import test.UpdateOrderPay;
 import test.WriteOrderResult;
 
@@ -31,13 +28,13 @@ public class PeriOrder_Mobile extends SeleneseTestCase {
 		String route = "*firefox E:\\软件下载\\火狐浏览器\\firefox.exe";
 		
 		// 从测试数据表中按照testNo获取数据
-		Connection c = new GetConnection().getConnection();		
+		Connection c = new GetConnection().getConnection("sit");		
 		GetData g = new GetData();
 		sourceData = g.getData(c, testNo);
 		
 		// 根据已获取的数据进行初始化
 		Preparation p = new Preparation();
-		selenium = p.setUp(selenium,route, sourceData.getString("test_url"));
+		selenium = p.setUp(selenium, route, sourceData.getString("test_url"));
 	}
 	
 	/*
@@ -51,14 +48,15 @@ public class PeriOrder_Mobile extends SeleneseTestCase {
 		System.out.println("打开  手机端首页 ！");
 		
 		ResultSet sourceData = null;
-		Connection c = new GetConnection().getConnection();
+		Connection c = new GetConnection().getConnection("sit");
 		// 测试数据行数暂时固定
 		String testNo = "tc.or.3";
 		
 		// 从测试数据表中按照testNo获取测试数据
 				GetData g = new GetData();
 				sourceData = g.getData(c, testNo);				
-
+			    String PAY_MODE = sourceData.getString("PAY_MODE");
+				
 				String TEST_URL =null;
 				TEST_URL = sourceData.getString("TEST_URL");
 				String orderOrigin = null;
@@ -114,24 +112,10 @@ public class PeriOrder_Mobile extends SeleneseTestCase {
 				
 				//订单确认页：付款方式、配送信息、填写发票	、提交订单
 				System.out.println("开始编辑订单提交页面~");
-				OrderConfirm_m orderconfirm1 = new OrderConfirm_m();
+				OrderConfirmM orderconfirm1 = new OrderConfirmM();
 				orderconfirm1.orderConfirm(selenium, sourceData);
 				System.out.println("订单确认 完毕！");
 				
-				//判断是否下单成功
-				
-				//在订单成功页抓取订单ID值，判断订单类型，并更新付款状态
-//				String orderId = null;	
-//				UpdateOrderPay updateorderpay = new UpdateOrderPay();
-//				
-//				String orderIdm2 = selenium.getText("class=ordercode");
-//				orderId = orderIdm2.substring(3,16);
-//				System.out.println(" 订单号："+orderId);				
-//			     updateorderpay.updateOrderPay(orderId);
-//			     System.out.println("新的订单号为"+orderId);
-//			     TEST_RESULT = "2";
-//			     System.out.println("if yu ju");
-				//在订单成功页抓取订单ID值，判断订单类型，并更新付款状态
 				
 				UpdateOrderPay updateorderpay = new UpdateOrderPay();
 				
@@ -143,52 +127,42 @@ public class PeriOrder_Mobile extends SeleneseTestCase {
 				if("1".equals(COMBINE_TYPE)){
 				}     
 				else if ("2".equals(COMBINE_TYPE)){				
-//					String orderIdm2 = selenium.getText("class=ordercode");
-//					orderId = orderIdm2.substring(3,16);
-//					System.out.println(" 订单号："+orderId);
 					
-				     updateorderpay.updateOrderPay(orderId,"1");
+				     updateorderpay.updateOrderPay(orderId,PAY_MODE,"sit");
 				     System.out.println("新的订单号为"+orderId);
 				     TEST_RESULT = "2";
-				     System.out.println("if yu ju");
+				     System.out.println("只下一个周边");
 					
 				}else if ("3".equals(COMBINE_TYPE)){
 					
 				}else if ("4".equals(COMBINE_TYPE)){
-					
+					updateorderpay.updateOrderPay(orderOrigin,orderId,PAY_MODE);
+				    TEST_RESULT = "2";
+				    System.out.println("下2个周边");
 				}else {
-					System.out.println("没进入IF");
+					System.out.println("下单类型为组合订单");
 				}
 		        //测试结果写入数据库        
 				//TEST_NO 测试用例编码 ORDER_NO 测试生成订单号 ORDER_STATUS 测试生成订单状态
 				//ORDER_STATUS_NAME 测试生成订单状态名称TEST_RESULT 测试结果。1，error  2：成功 
 				//TEST_RESULT_REASON 测试不通过原因
 				
-				 GetMaxResultId getMaxResultId = new GetMaxResultId();
-				   TESULT_ID = getMaxResultId.getMaxResultId();
+				   GetMaxResultId getMaxResultId = new GetMaxResultId();
+				   TESULT_ID = getMaxResultId.getMaxResultId("sit");
 				   ORDER_NO = orderId;
-				   ORDER_STATUS = "30";
+				   if("0".equals(PAY_MODE)){
+					   ORDER_STATUS = "20";//部分支付
+				   }else {
+					   ORDER_STATUS = "30";//已支付
+				   }
 				   ORDER_STATUS_NAME = "已支付待派单";
-				   
-				   System.out.println(""+TESULT_ID+","+TEST_NO+"");
-				   
-//				   java.sql.Date d = new java.sql.Date(System.currentTimeMillis());
-//				   
-//				   SimpleDateFormat sdf = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss");
-//				   Date dd = new Date();
-//				   String now = sdf.format(dd);
-				   
-//				   java.sql.Timestamp CREAT_DATE =new java.sql.Timestamp(dd.getTime());
-//				   String dd =sdf.format(d);
-//				   System.out.println(dd);
-//				   Date ddd;CREAT_DATE
-//				   ddd = sdf.parse(dd);
-//				   System.out.println(now);
+				   System.out.println("支付状态为："+ORDER_STATUS);
+				   System.out.println(""+TESULT_ID+","+TEST_NO+","+ORDER_STATUS+"");
 				   
 				   WriteOrderResult writerestult = new WriteOrderResult();
-				   writerestult.writeresult(TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
+				   writerestult.writeresult("sit",TESULT_ID, TEST_NO, ORDER_NO, ORDER_STATUS, ORDER_STATUS_NAME, TEST_RESULT, TEST_RESULT_REASON);
 				   System.out.println("测试结果写入数据库完成");
-				   
+				   				   
 					  // 模拟订单流程，打开中台
 				   selenium = new DefaultSelenium("localhost", 4444, "*firefox E:\\软件下载\\火狐浏览器\\firefox.exe", "http://sitscadm.boe.com/sc-support-admin");
 				   selenium.start();
@@ -198,10 +172,7 @@ public class PeriOrder_Mobile extends SeleneseTestCase {
 				 //登录中台
 				   AdminLogin adminlogin = new AdminLogin();
 				   adminlogin.adminLogin(selenium, sourceData);
-				   //开始模拟订单流程
-//				   OrderStatusInfo o = null;
-//				   OrderStatusChange orderstatuschange = new OrderStatusChange();
-//				   orderstatuschange.orderStatusChange(selenium, o);
+
 				   
 				   OrderStatusInfo o = new OrderStatusInfo();
 				   o.orderNo=orderId;

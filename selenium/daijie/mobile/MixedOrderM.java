@@ -86,7 +86,13 @@ public class MixedOrderM {
 		// 继续购买周边产品
 		selenium.setSpeed("1000");
 		selenium.click("link=网站地图");
-		selenium.click("link=周边商品");
+		try {
+			Thread.sleep(2500);// 暂停2.5秒后程序继续执行
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		selenium.click("link=周边产品");
 		System.out.println("手机端周边产品界面打开 完毕！");
 		try {
 			Thread.sleep(1500);// 暂停1.5秒后程序继续执行

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 
 
+import daijie.basic.GetConnection;
 /*参数说明：
  * orderNo：订单号
  * objectStatus：目标订单状态，包括1（在线支付待签收）、2（货到付款扣款完成）、3（签收成功）
@@ -18,7 +19,7 @@ public class Order_status extends SeleneseTestCase{
 	{
 		String ORDER_STATUS = null;
 		//从数据库 OR_ORDER获取订单的收款单的状态,暂时全部取出 
-		Connection conn = new GetConnection().getConnection();
+		Connection conn = new GetConnection().getConnection("sit");
 		String orderSql= "select * from SELENIUM_OR_RESULT where ORDER_NO= '"+ORDER_NO+"'";
 		java.sql.Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(orderSql);	

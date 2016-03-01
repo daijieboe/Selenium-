@@ -2,9 +2,10 @@ package daijie.pc;
 
 import java.sql.ResultSet;
 
+import test.AltaBuyNow;
+import test.GetMaxResultId;
 import test.JudgeOrderSub;
-import test.ShoppingCart;
-import test.UpdateOrderPay;
+import test.WriteOrderResult;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -13,21 +14,9 @@ import daijie.basic.Login;
 public class OrderAltaCancel {
 	public void orderAltaCancel(Selenium selenium, ResultSet sourceData) throws Exception {
 		
-		String PAY_MODE = sourceData.getString("PAY_MODE");
-		String TEST_URL = null;
-		TEST_URL = sourceData.getString("TEST_URL");
-		String orderOrigin = null;
-		orderOrigin = TEST_URL.substring(7, 10);
+		String TEST_URL = sourceData.getString("TEST_URL");
+		String orderOrigin = TEST_URL.substring(7, 10);
 		System.out.println("orderOrigin:" + orderOrigin);
-
-		// 准备要获取的测试结果数据
-		// String TEST_NO = sourceData.getString("TEST_NO");
-		// String ORDER_NO;
-		// String ORDER_STATUS = null;
-		// String ORDER_STATUS_NAME;
-		 String TEST_RESULT = null;
-		// String TEST_RESULT_REASON = null;
-		// int TESULT_ID = 0;
 
 		// 登录
 		Login l = new Login();
@@ -36,38 +25,42 @@ public class OrderAltaCancel {
 		// 判断下单类型，开始下单、购物车结算进入订单提交页面
 		System.out.println("开始下单");
 
-		new MixedOrder().mixedOrder(selenium, sourceData);
-
-		// 去购物车结算
-		selenium.open("/store/cart/cart.html");
-		new ShoppingCart().ShoppingCartPC(selenium);
+		new AltaBuyNow().altaBuyNow1(selenium, sourceData);
 
 		// 订单确认页提交订单
-		OrderConfirm orderconfirm = new OrderConfirm();
-		orderconfirm.orderConfirm(selenium, sourceData);
-		System.out.println("订单确认 完毕！");
-		selenium.waitForPageToLoad("30000");
+		new OrderConfirm().orderConfirm(selenium, sourceData);
+		System.out.println("订单提交成功");
 
 		// 判断是否正确跳转到了订单成功页 要是不成功怎么处理？
-		JudgeOrderSub judge = new JudgeOrderSub(selenium);
-		judge.judgeordersub(selenium, sourceData);
+		new JudgeOrderSub(selenium).judgeordersub(selenium, sourceData);
 
 		// 在订单成功页抓取订单ID值，判断订单类型，并更新付款状态
-
-		String orderId1 = null;
-		String orderId2 = null;
+		String orderId = null;
 		String souceString = null;
-		UpdateOrderPay updateorderpay = new UpdateOrderPay();
+		
 		souceString = selenium.getText("xpath=//div[@class='inlineleft']");
-		orderId1 = souceString.substring(4, 17);
-		souceString = selenium.getText("xpath=(//div[@class='inlineleft'])[3]");
-		orderId2 = souceString.substring(4, 17);
+		orderId = souceString.substring(4, 17);
+		System.out.println("订单号为：" + orderId);
 
-		System.out.println("组合订单号为：" + orderId1 + " " + orderId2);
+		// 在前台将订单取消
+		OrderCancel oc = new OrderCancel();
+		oc.orderCancel(selenium, orderId);
 
-		updateorderpay.updateOrderPay(orderId1 + " + " + orderId2, PAY_MODE,
-				orderOrigin);
-		TEST_RESULT = "2";
-		System.out.println("下单类型为组合订单");
+		// 准备将测试结果写入数据库
+		String TEST_RESULT = "2";
+		String ORDER_STATUS = "91";
+		String ORDER_STATUS_NAME = "订单取消";
+		String TEST_NO = sourceData.getString("TEST_NO");
+		// 备注说明
+		String TEST_RESULT_REASON = "PC端Alta下单取消测试，订单号为：" + orderId;
+
+		GetMaxResultId gmri = new GetMaxResultId();
+		WriteOrderResult wr = new WriteOrderResult();
+		
+		// 写入订单记录
+		int TESULT_ID = gmri.getMaxResultId(orderOrigin);
+		wr.writeresult(orderOrigin, TESULT_ID, TEST_NO, orderId,ORDER_STATUS,
+				ORDER_STATUS_NAME, TEST_RESULT,TEST_RESULT_REASON);
+		System.out.println("测试结果写入数据库完成");
 	}
 }
